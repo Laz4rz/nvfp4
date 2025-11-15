@@ -89,13 +89,13 @@ def dequantize_matrix_blockwise(A_q: torch.Tensor, SFA: torch.Tensor, return_typ
 def to_nvfp4(t: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
     return torch.Tensor([]), torch.Tensor([]) 
 
-def scaled_gemm_naive(A_q, B_q, SFA, SFB) -> torch.Tensor:
+def scaled_mm_naive(A_q, B_q, SFA, SFB) -> torch.Tensor:
     A_full = dequantize_matrix_blockwise(A_q, SFA)
     B_full = dequantize_matrix_blockwise(B_q, SFB)
 
     return A_full @ B_full.T
 
-def scaled_gemm_fused(A_q, B_q, SFA, SFB) -> torch.Tensor:
+def scaled_mm_fused(A_q, B_q, SFA, SFB) -> torch.Tensor:
     assert A_q.shape[1] == B_q.shape[1], "A and B shapes don't match for matmul"
     M, K = A_q.shape
     num_blocks = SFA.shape[1]
