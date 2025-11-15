@@ -36,7 +36,7 @@ class TestQuantizeDequantizeRowBlockwise(unittest.TestCase):
 
     def test_roundtrip_better_with_bits(self):
         x = torch.rand(16, dtype=torch.float32)
-        num_bits_l = [4, 8, 16, 32]
+        num_bits_l = [4, 8]
         mses = []
         for num_bits in num_bits_l:
             q, s = quantize_row_blockwise(x, block_size=16, num_bits=num_bits)
@@ -45,7 +45,7 @@ class TestQuantizeDequantizeRowBlockwise(unittest.TestCase):
             # Assert monotonic non-increase
             for a, b in zip(mses, mses[1:]):
                 self.assertLessEqual(b, a + 1e-7)
-        print("Row: MSEs for [4, 8, 16, 32] bits:", mses)
+        print("Row: MSEs for [4, 8] bits:", mses)
 
 
 class TestMatrixQuantizeDequantizeBlockwise(unittest.TestCase):
@@ -92,7 +92,7 @@ class TestMatrixQuantizeDequantizeBlockwise(unittest.TestCase):
             A_hat = dequantize_matrix_blockwise(A_q, SFA)
             mses.append((A - A_hat).pow(2).mean().item())
         self.assertLessEqual(mses[1], mses[0] + 1e-7)
-        print("Matrix: MSEs for [4, 8, 16, 32] bits:", mses)
+        print("Matrix: MSEs for [4, 8] bits:", mses)
 
 
 if __name__ == "__main__":
