@@ -1,4 +1,4 @@
-from task import input_t, output_t
+from nvfp4_gemv.task import input_t, output_t
 
 
 def custom_kernel(data: input_t) -> output_t:

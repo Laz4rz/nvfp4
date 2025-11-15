@@ -1,5 +1,7 @@
 import torch
-from task import input_t, output_t
+from nvfp4_gemv.task import input_t, output_t
+from nvfp4_gemv.template import custom_kernel as kernel
+from nvfp4_gemv.template_cute import custom_kernel as cute_kernel
 
 # Kernel configuration parameters
 sf_vec_size = 16
@@ -35,7 +37,6 @@ def custom_kernel(
 
     # Get dimensions from MxNxL layout
     _, _, l = c_ref.shape
-
     # Call torch._scaled_mm to compute the GEMV result
     for l_idx in range(l):
         # Convert the scale factor tensor to blocked format
@@ -52,3 +53,5 @@ def custom_kernel(
         )
         c_ref[:, 0, l_idx] = res[:, 0]
     return c_ref
+
+# custom_kernel = cute_kernel

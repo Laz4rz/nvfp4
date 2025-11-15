@@ -1,5 +1,5 @@
 import torch
-from task import input_t, output_t
+from nvfp4_gemv.task import input_t, output_t
 
 import cutlass
 import cutlass.cute as cute
