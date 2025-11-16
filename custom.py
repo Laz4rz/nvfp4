@@ -122,10 +122,9 @@ def scaled_mm_fused(A_q, B_q, SFA, SFB, return_dtype: torch.dtype=torch.float32)
 
     for m in range(M):
         for n in range(N):
-            acc = A_q.new_tensor(0.0, dtype=torch.float32)
-            for k in range(K):
-                bid = k // block_size
-                acc += (A_q[m, k] * SFA[m, bid]) * (B_q[n, k] * SFB[n, bid])
+            acc = out.new_tensor(0.0)
+            for bid in range(num_blocks):
+                acc += ((A_q[m, bid*block_size:(bid+1)*block_size] * SFA[m, bid]) * (B_q[n, bid*block_size:(bid+1)*block_size] * SFB[n, bid])).sum()
             out[m, n] = acc
 
     return out
